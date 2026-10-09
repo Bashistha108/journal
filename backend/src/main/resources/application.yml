@@ -1,0 +1,11 @@
+server:
+  port: ${TJ_SERVER_PORT:8080}
+  address: 127.0.0.1
+
+spring:
+  datasource:
+    url: jdbc:postgresql://${TJ_DB_HOST:127.0.0.1}:${TJ_DB_PORT:5432}/${TJ_DB_NAME:trading_journal}
+    username: ${TJ_DB_USER:trading_journal}
+    password: ${TJ_DB_PASSWORD:trading_journal_pass}
+  liquibase:
+    enabled: false # Disabled in Phase 1 until Liquibase setup in Phase 2
