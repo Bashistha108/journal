@@ -15,3 +15,7 @@ spring:
     liquibase-schema: public
     default-schema: tj_meta
     drop-first: false
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 160MB

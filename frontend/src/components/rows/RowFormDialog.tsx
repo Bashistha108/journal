@@ -4,23 +4,26 @@ import type { RowDetail } from '../../types/row';
 import type { ApiError } from '../../types/api';
 import DynamicRowForm from '../forms/DynamicRowForm';
 
+import type { AttachmentUpload } from '../../types/attachment';
+
 interface RowFormDialogProps {
+    tableId: number;
     columns: ColumnDetail[];
     initialData?: RowDetail | null;
-    onSubmit: (values: Record<number, any>, expectedVersion?: number) => Promise<void>;
+    onSubmit: (values: Record<number, any>, expectedVersion?: number, newAttachments?: AttachmentUpload[], removeAttachmentIds?: number[]) => Promise<void>;
     onClose: () => void;
     isOpen: boolean;
 }
 
-const RowFormDialog: React.FC<RowFormDialogProps> = ({ columns, initialData, onSubmit, onClose, isOpen }) => {
+const RowFormDialog: React.FC<RowFormDialogProps> = ({ tableId, columns, initialData, onSubmit, onClose, isOpen }) => {
     const [apiError, setApiError] = useState<ApiError | null>(null);
 
     if (!isOpen) return null;
 
-    const handleSubmit = async (values: Record<number, any>, expectedVersion?: number) => {
+    const handleSubmit = async (values: Record<number, any>, expectedVersion?: number, newAttachments?: AttachmentUpload[], removeAttachmentIds?: number[]) => {
         setApiError(null);
         try {
-            await onSubmit(values, expectedVersion);
+            await onSubmit(values, expectedVersion, newAttachments, removeAttachmentIds);
             onClose();
         } catch (err: any) {
             setApiError(err);
@@ -46,6 +49,7 @@ const RowFormDialog: React.FC<RowFormDialogProps> = ({ columns, initialData, onS
                 
                 <div className="p-6 overflow-y-auto">
                     <DynamicRowForm
+                        tableId={tableId}
                         columns={columns}
                         initialData={initialData}
                         onSubmit={handleSubmit}

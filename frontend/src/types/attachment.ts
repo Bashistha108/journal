@@ -6,3 +6,9 @@ export interface AttachmentMetadata {
     sizeBytes: number;
     createdAt: string;
 }
+
+export interface AttachmentUpload {
+    file: File;
+    clientRef: string;
+    columnId: number;
+}

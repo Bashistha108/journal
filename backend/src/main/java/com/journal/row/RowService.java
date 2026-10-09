@@ -10,6 +10,9 @@ import com.journal.metadata.SelectOption;
 import com.journal.metadata.SelectOptionRepository;
 import com.journal.metadata.TableRegistry;
 import com.journal.metadata.TableRegistryRepository;
+import com.journal.attachment.AttachmentService;
+import com.journal.attachment.AttachmentChangeSet;
+import com.journal.attachment.AttachmentMetadata;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,22 +28,20 @@ public class RowService {
     private final ColumnRegistryRepository columnRepo;
     private final SelectOptionRepository selectRepo;
     private final RowRepository rowRepo;
+    private final AttachmentService attachmentService;
 
-    public RowService(TableRegistryRepository tableRepo, ColumnRegistryRepository columnRepo, SelectOptionRepository selectRepo, RowRepository rowRepo) {
+    public RowService(TableRegistryRepository tableRepo, ColumnRegistryRepository columnRepo, SelectOptionRepository selectRepo, RowRepository rowRepo, AttachmentService attachmentService) {
         this.tableRepo = tableRepo;
         this.columnRepo = columnRepo;
         this.selectRepo = selectRepo;
         this.rowRepo = rowRepo;
+        this.attachmentService = attachmentService;
     }
 
     @Transactional
-    public RowDetail createRow(Long tableId, RowSaveRequest request) {
+    public RowDetail createRow(Long tableId, RowSaveRequest request, AttachmentChangeSet changeSet) {
         TableRegistry tr = tableRepo.findById(tableId)
                 .orElseThrow(() -> new ResourceNotFoundException("TABLE_NOT_FOUND", "Table not found"));
-        
-        if (request.getNewAttachments() != null && !request.getNewAttachments().isEmpty()) {
-            throw new ValidationException("Attachments not supported yet", List.of(new FieldError("newAttachments", "VALIDATION_FAILED", "Attachments are not supported until Phase 6")));
-        }
 
         List<ColumnRegistry> columns = columnRepo.findByTableId(tableId);
         
@@ -89,7 +90,10 @@ public class RowService {
             throw new ValidationException("Validation failed", errors);
         }
 
-        return rowRepo.insert(tableId, jdbcValues, columns);
+        RowDetail detail = rowRepo.insert(tableId, jdbcValues, columns);
+        List<AttachmentMetadata> processedAttachments = attachmentService.processChangeSet(tableId, tr.physicalName(), detail.getId(), changeSet, List.of());
+        detail.setAttachments(processedAttachments);
+        return detail;
     }
 
     public RowDetail getRow(Long tableId, Long rowId) {
@@ -102,25 +106,22 @@ public class RowService {
         if (detail == null) {
             throw new ResourceNotFoundException("ROW_NOT_FOUND", "Row not found");
         }
+        
+        TableRegistry tr = tableRepo.findById(tableId).get();
+        detail.setAttachments(attachmentService.getAttachments(tr.physicalName(), rowId));
         return detail;
     }
 
+    public boolean exists(Long tableId, Long rowId) {
+        return rowRepo.exists(tableId, rowId);
+    }
+
     @Transactional
-    public RowDetail updateRow(Long tableId, Long rowId, RowSaveRequest request) {
-        if (tableRepo.findById(tableId).isEmpty()) {
-            throw new ResourceNotFoundException("TABLE_NOT_FOUND", "Table not found");
-        }
+    public RowDetail updateRow(Long tableId, Long rowId, RowSaveRequest request, AttachmentChangeSet changeSet) {
+        TableRegistry tr = tableRepo.findById(tableId).orElseThrow(() -> new ResourceNotFoundException("TABLE_NOT_FOUND", "Table not found"));
 
         if (request.getExpectedVersion() == null) {
             throw new ValidationException("Missing expected version", List.of(new FieldError("expectedVersion", "BAD_REQUEST", "Expected version is required for update")));
-        }
-        
-        if (request.getNewAttachments() != null && !request.getNewAttachments().isEmpty()) {
-            throw new ValidationException("Attachments not supported yet", List.of(new FieldError("newAttachments", "VALIDATION_FAILED", "Attachments are not supported until Phase 6")));
-        }
-        
-        if (request.getRemoveAttachmentIds() != null && !request.getRemoveAttachmentIds().isEmpty()) {
-            throw new ValidationException("Attachments not supported yet", List.of(new FieldError("removeAttachmentIds", "VALIDATION_FAILED", "Attachments are not supported until Phase 6")));
         }
 
         List<ColumnRegistry> columns = columnRepo.findByTableId(tableId);
@@ -176,7 +177,11 @@ public class RowService {
             }
         }
         
-        return rowRepo.getById(tableId, rowId, columns);
+        RowDetail detail = rowRepo.getById(tableId, rowId, columns);
+        List<AttachmentMetadata> existingAttachments = attachmentService.getAttachments(tr.physicalName(), rowId);
+        List<AttachmentMetadata> updatedAttachments = attachmentService.processChangeSet(tableId, tr.physicalName(), rowId, changeSet, existingAttachments);
+        detail.setAttachments(updatedAttachments);
+        return detail;
     }
 
     @Transactional

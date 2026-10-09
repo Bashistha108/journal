@@ -9,7 +9,7 @@ export async function fetchClient<T = void>(endpoint: string, options: RequestIn
         headers.set('X-TJ-Client', 'web');
     }
     
-    if (options.body && !headers.has('Content-Type')) {
+    if (options.body && !(options.body instanceof FormData) && !headers.has('Content-Type')) {
         headers.set('Content-Type', 'application/json');
     }
 
