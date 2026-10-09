@@ -1,0 +1,161 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001-create-schemas
+      author: antigravity
+      changes:
+        - sql:
+            sql: CREATE SCHEMA IF NOT EXISTS tj_meta;
+        - sql:
+            sql: CREATE SCHEMA IF NOT EXISTS tj_data;
+            
+  - changeSet:
+      id: 001-create-table-registry
+      author: antigravity
+      changes:
+        - createTable:
+            schemaName: tj_meta
+            tableName: table_registry
+            columns:
+              - column:
+                  name: table_id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: display_name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: normalized_name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: physical_name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: created_at
+                  type: TIMESTAMP WITH TIME ZONE
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 001-create-column-registry
+      author: antigravity
+      changes:
+        - createTable:
+            schemaName: tj_meta
+            tableName: column_registry
+            columns:
+              - column:
+                  name: column_id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: table_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_column_table
+                    references: tj_meta.table_registry(table_id)
+                    deleteCascade: true
+              - column:
+                  name: position
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: display_name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: normalized_name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: data_type
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: physical_name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: created_at
+                  type: TIMESTAMP WITH TIME ZONE
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+        - sql:
+            sql: "ALTER TABLE tj_meta.column_registry ADD CONSTRAINT chk_data_type CHECK (data_type IN ('TEXT', 'INTEGER', 'DECIMAL', 'BOOLEAN', 'DATE', 'DATETIME', 'SELECT', 'LINK', 'IMAGE'));"
+        - addUniqueConstraint:
+            schemaName: tj_meta
+            tableName: column_registry
+            columnNames: table_id, position
+            constraintName: uq_column_table_position
+        - addUniqueConstraint:
+            schemaName: tj_meta
+            tableName: column_registry
+            columnNames: table_id, normalized_name
+            constraintName: uq_column_table_normalized
+        - addUniqueConstraint:
+            schemaName: tj_meta
+            tableName: column_registry
+            columnNames: table_id, column_id
+            constraintName: uq_column_table_id
+
+  - changeSet:
+      id: 001-create-select-option
+      author: antigravity
+      changes:
+        - createTable:
+            schemaName: tj_meta
+            tableName: select_option
+            columns:
+              - column:
+                  name: option_id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: column_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_select_column
+                    references: tj_meta.column_registry(column_id)
+                    deleteCascade: true
+              - column:
+                  name: value
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: normalized_value
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: position
+                  type: INT
+                  constraints:
+                    nullable: false
+        - addUniqueConstraint:
+            schemaName: tj_meta
+            tableName: select_option
+            columnNames: column_id, normalized_value
+            constraintName: uq_select_column_value

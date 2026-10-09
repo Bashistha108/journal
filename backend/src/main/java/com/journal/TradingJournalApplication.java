@@ -5,8 +5,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.liquibase.LiquibaseAutoConfiguration;
 
-// Exclude DB connection and Liquibase for Phase 1 to allow independent startup without PostgreSQL
-@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class, LiquibaseAutoConfiguration.class})
+// Database connection and Liquibase enabled for Phase 2
+@SpringBootApplication
 public class TradingJournalApplication {
 
     public static void main(String[] args) {
