@@ -1,0 +1,7 @@
+{
+  "status": 404,
+  "code": "ROW_NOT_FOUND",
+  "message": "Example error message for ROW_NOT_FOUND",
+  "requestId": "req_123abc",
+  "fieldErrors": []
+}

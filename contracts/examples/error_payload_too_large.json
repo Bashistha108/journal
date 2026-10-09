@@ -1,0 +1,7 @@
+{
+  "status": 413,
+  "code": "PAYLOAD_TOO_LARGE",
+  "message": "Example error message for PAYLOAD_TOO_LARGE",
+  "requestId": "req_123abc",
+  "fieldErrors": []
+}

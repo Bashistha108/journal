@@ -1,0 +1,7 @@
+{
+  "status": 422,
+  "code": "LIMIT_EXCEEDED",
+  "message": "Example error message for LIMIT_EXCEEDED",
+  "requestId": "req_123abc",
+  "fieldErrors": []
+}

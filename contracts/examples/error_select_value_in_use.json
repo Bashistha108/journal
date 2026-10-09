@@ -1,0 +1,7 @@
+{
+  "status": 409,
+  "code": "SELECT_VALUE_IN_USE",
+  "message": "Example error message for SELECT_VALUE_IN_USE",
+  "requestId": "req_123abc",
+  "fieldErrors": []
+}

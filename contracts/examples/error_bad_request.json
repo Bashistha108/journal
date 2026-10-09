@@ -1,0 +1,7 @@
+{
+  "status": 400,
+  "code": "BAD_REQUEST",
+  "message": "Example error message for BAD_REQUEST",
+  "requestId": "req_123abc",
+  "fieldErrors": []
+}

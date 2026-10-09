@@ -1,0 +1,7 @@
+{
+  "status": 422,
+  "code": "SELECT_VALUE_INVALID",
+  "message": "Example error message for SELECT_VALUE_INVALID",
+  "requestId": "req_123abc",
+  "fieldErrors": []
+}

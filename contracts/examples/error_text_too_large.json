@@ -1,0 +1,7 @@
+{
+  "status": 422,
+  "code": "TEXT_TOO_LARGE",
+  "message": "Example error message for TEXT_TOO_LARGE",
+  "requestId": "req_123abc",
+  "fieldErrors": []
+}

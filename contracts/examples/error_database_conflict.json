@@ -1,0 +1,7 @@
+{
+  "status": 409,
+  "code": "DATABASE_CONFLICT",
+  "message": "Example error message for DATABASE_CONFLICT",
+  "requestId": "req_123abc",
+  "fieldErrors": []
+}

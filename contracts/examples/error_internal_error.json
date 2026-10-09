@@ -1,0 +1,7 @@
+{
+  "status": 500,
+  "code": "INTERNAL_ERROR",
+  "message": "Example error message for INTERNAL_ERROR",
+  "requestId": "req_123abc",
+  "fieldErrors": []
+}

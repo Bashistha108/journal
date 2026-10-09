@@ -1,0 +1,22 @@
+{
+  "name": "Trades",
+  "columns": [
+    {
+      "name": "Trade Date",
+      "dataType": "DATE"
+    },
+    {
+      "name": "Symbol",
+      "dataType": "TEXT"
+    },
+    {
+      "name": "Market Bias",
+      "dataType": "SELECT",
+      "selectOptions": [
+        "Bullish",
+        "Bearish",
+        "Neutral"
+      ]
+    }
+  ]
+}

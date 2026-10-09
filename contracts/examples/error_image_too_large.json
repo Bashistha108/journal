@@ -1,0 +1,7 @@
+{
+  "status": 422,
+  "code": "IMAGE_TOO_LARGE",
+  "message": "Example error message for IMAGE_TOO_LARGE",
+  "requestId": "req_123abc",
+  "fieldErrors": []
+}

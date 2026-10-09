@@ -1,0 +1,7 @@
+{
+  "status": 409,
+  "code": "ROW_VERSION_CONFLICT",
+  "message": "Example error message for ROW_VERSION_CONFLICT",
+  "requestId": "req_123abc",
+  "fieldErrors": []
+}
