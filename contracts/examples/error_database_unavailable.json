@@ -1,0 +1,7 @@
+{
+  "status": 503,
+  "code": "DATABASE_UNAVAILABLE",
+  "message": "Example error message for DATABASE_UNAVAILABLE",
+  "requestId": "req_123abc",
+  "fieldErrors": []
+}

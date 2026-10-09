@@ -1,0 +1,7 @@
+{
+  "status": 422,
+  "code": "INVALID_NAME",
+  "message": "Example error message for INVALID_NAME",
+  "requestId": "req_123abc",
+  "fieldErrors": []
+}

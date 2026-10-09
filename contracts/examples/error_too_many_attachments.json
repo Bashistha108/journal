@@ -1,0 +1,7 @@
+{
+  "status": 422,
+  "code": "TOO_MANY_ATTACHMENTS",
+  "message": "Example error message for TOO_MANY_ATTACHMENTS",
+  "requestId": "req_123abc",
+  "fieldErrors": []
+}

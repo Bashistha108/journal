@@ -1,0 +1,7 @@
+{
+  "status": 422,
+  "code": "UNSUPPORTED_IMAGE",
+  "message": "Example error message for UNSUPPORTED_IMAGE",
+  "requestId": "req_123abc",
+  "fieldErrors": []
+}

@@ -1,0 +1,7 @@
+{
+  "status": 403,
+  "code": "FORBIDDEN_ORIGIN",
+  "message": "Example error message for FORBIDDEN_ORIGIN",
+  "requestId": "req_123abc",
+  "fieldErrors": []
+}

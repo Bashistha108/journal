@@ -1,0 +1,22 @@
+{
+  "page": 1,
+  "sort": {
+    "columnId": 1,
+    "direction": "DESC"
+  },
+  "filters": [
+    {
+      "columnId": 2,
+      "operator": "CONTAINS",
+      "value": "AAPL"
+    },
+    {
+      "columnId": 3,
+      "operator": "MATCHES_ANY",
+      "values": [
+        "Bullish",
+        "Bearish"
+      ]
+    }
+  ]
+}

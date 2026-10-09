@@ -1,0 +1,13 @@
+{
+  "status": 422,
+  "code": "VALIDATION_FAILED",
+  "message": "Validation failed",
+  "requestId": "req_123abc",
+  "fieldErrors": [
+    {
+      "field": "name",
+      "code": "MISSING",
+      "message": "Name is required"
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "status": 409,
+  "code": "DUPLICATE_NAME",
+  "message": "Example error message for DUPLICATE_NAME",
+  "requestId": "req_123abc",
+  "fieldErrors": []
+}

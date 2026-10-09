@@ -1,0 +1,461 @@
+openapi: 3.0.3
+info:
+  title: Trading Journal API
+  version: 1.0.0
+  description: API contract for the Trading Journal local application.
+
+servers:
+  - url: http://127.0.0.1:8080/api/v1
+
+components:
+  schemas:
+    TableDetail:
+      type: object
+      properties:
+        id:
+          type: integer
+        displayName:
+          type: string
+        columns:
+          type: array
+          items:
+            $ref: '#/components/schemas/ColumnDetail'
+    ColumnDetail:
+      type: object
+      properties:
+        id:
+          type: integer
+        displayName:
+          type: string
+        dataType:
+          type: string
+          enum: [TEXT, INTEGER, DECIMAL, BOOLEAN, DATE, DATETIME, SELECT, LINK, IMAGE]
+        selectOptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/SelectOption'
+    SelectOption:
+      type: object
+      properties:
+        id:
+          type: integer
+        value:
+          type: string
+    RowListItem:
+      type: object
+      properties:
+        id:
+          type: integer
+        version:
+          type: integer
+        values:
+          type: object
+          additionalProperties: {}
+        attachmentCounts:
+          type: object
+          additionalProperties:
+            type: integer
+    RowDetail:
+      type: object
+      properties:
+        id:
+          type: integer
+        version:
+          type: integer
+        values:
+          type: object
+          additionalProperties: {}
+        attachments:
+          type: array
+          items:
+            $ref: '#/components/schemas/AttachmentMetadata'
+    AttachmentMetadata:
+      type: object
+      properties:
+        id:
+          type: integer
+        columnId:
+          type: integer
+        filename:
+          type: string
+        contentType:
+          type: string
+        sizeBytes:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+    ApiError:
+      type: object
+      properties:
+        status:
+          type: integer
+        code:
+          type: string
+        message:
+          type: string
+        requestId:
+          type: string
+        fieldErrors:
+          type: array
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+              code:
+                type: string
+              message:
+                type: string
+    RowSaveRequest:
+      type: object
+      properties:
+        values:
+          type: object
+          additionalProperties: {}
+        newAttachments:
+          type: array
+          items:
+            type: object
+            properties:
+              clientRef:
+                type: string
+              columnId:
+                type: integer
+        expectedVersion:
+          type: integer
+        removeAttachmentIds:
+          type: array
+          items:
+            type: integer
+    FilterRequest:
+      type: object
+      properties:
+        columnId:
+          type: integer
+        operator:
+          type: string
+          enum: [CONTAINS, EQUALS, IS_EMPTY, IS_NOT_EMPTY, GREATER_THAN, LESS_THAN, BETWEEN, ON, BEFORE, AFTER, IS_TRUE, IS_FALSE, MATCHES_ANY, HAS_ATTACHMENTS, HAS_NO_ATTACHMENTS]
+        value: {}
+        values:
+          type: array
+          items: {}
+        from: {}
+        to: {}
+    SortRequest:
+      type: object
+      properties:
+        columnId:
+          type: integer
+        direction:
+          type: string
+          enum: [ASC, DESC]
+    QueryRequest:
+      type: object
+      properties:
+        page:
+          type: integer
+          default: 1
+        sort:
+          $ref: '#/components/schemas/SortRequest'
+        filters:
+          type: array
+          items:
+            $ref: '#/components/schemas/FilterRequest'
+    PageResponse:
+      type: object
+      properties:
+        page:
+          type: integer
+        pageSize:
+          type: integer
+        totalItems:
+          type: integer
+        totalPages:
+          type: integer
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/RowListItem'
+
+paths:
+  /health:
+    get:
+      summary: Database connectivity and version
+      responses:
+        '200':
+          description: OK
+  /tables:
+    get:
+      summary: List tables with column counts
+      responses:
+        '200':
+          description: OK
+    post:
+      summary: Create a table with its columns
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                columns:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      dataType:
+                        type: string
+                      selectOptions:
+                        type: array
+                        items:
+                          type: string
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TableDetail'
+  /tables/{tableId}:
+    get:
+      summary: Table detail
+      parameters:
+        - name: tableId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TableDetail'
+  /tables/{tableId}/columns:
+    post:
+      summary: Add a column
+      parameters:
+        - name: tableId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                dataType:
+                  type: string
+                selectOptions:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ColumnDetail'
+  /tables/{tableId}/columns/{columnId}/select-options:
+    post:
+      summary: Add Select values
+      parameters:
+        - name: tableId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: columnId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                values:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '201':
+          description: Created
+  /tables/{tableId}/columns/{columnId}/select-options/{optionId}:
+    delete:
+      summary: Remove an unused value
+      parameters:
+        - name: tableId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: columnId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: optionId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: No Content
+  /tables/{tableId}/rows/query:
+    post:
+      summary: Filtered, sorted, paged rows
+      parameters:
+        - name: tableId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QueryRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PageResponse'
+  /tables/{tableId}/rows:
+    post:
+      summary: Create a row
+      parameters:
+        - name: tableId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RowSaveRequest'
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                row:
+                  $ref: '#/components/schemas/RowSaveRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RowDetail'
+  /tables/{tableId}/rows/{rowId}:
+    get:
+      summary: Row detail
+      parameters:
+        - name: tableId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: rowId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RowDetail'
+    patch:
+      summary: Update a row
+      parameters:
+        - name: tableId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: rowId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RowSaveRequest'
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                row:
+                  $ref: '#/components/schemas/RowSaveRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RowDetail'
+    delete:
+      summary: Permanently delete a row and its attachments
+      parameters:
+        - name: tableId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: rowId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: No Content
+  /tables/{tableId}/rows/{rowId}/attachments/{attachmentId}/content:
+    get:
+      summary: Image bytes
+      parameters:
+        - name: tableId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: rowId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: attachmentId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            image/*:
+              schema:
+                type: string
+                format: binary

@@ -1,0 +1,9 @@
+{
+  "expectedVersion": 2,
+  "values": {
+    "2": "TSLA"
+  },
+  "removeAttachmentIds": [
+    101
+  ]
+}
