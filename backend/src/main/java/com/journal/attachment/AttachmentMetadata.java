@@ -7,6 +7,8 @@ public class AttachmentMetadata {
     private Long columnId;
     private String filename;
     private String contentType;
+    private Integer width;
+    private Integer height;
     private Long sizeBytes;
     private OffsetDateTime createdAt;
 
@@ -40,6 +42,22 @@ public class AttachmentMetadata {
 
     public void setContentType(String contentType) {
         this.contentType = contentType;
+    }
+
+    public Integer getWidth() {
+        return width;
+    }
+
+    public void setWidth(Integer width) {
+        this.width = width;
+    }
+
+    public Integer getHeight() {
+        return height;
+    }
+
+    public void setHeight(Integer height) {
+        this.height = height;
     }
 
     public Long getSizeBytes() {

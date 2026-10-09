@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { tableApi, type TableDetail } from '../api/tables';
 import CreateTableModal from '../components/CreateTableModal';
 
@@ -49,12 +50,16 @@ export default function TableManagementPage() {
       ) : (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1rem' }}>
           {tables.map(table => (
-            <div key={table.id} style={{ background: 'var(--card-bg)', border: '1px solid var(--border-color)', borderRadius: '8px', padding: '1.5rem' }}>
-              <h2 style={{ fontSize: '1.25rem', marginBottom: '0.5rem' }}>{table.displayName}</h2>
-              <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>
-                {table.columns.length} columns
-              </p>
-            </div>
+            <Link to={`/tables/${table.id}`} key={table.id} style={{ textDecoration: 'none', color: 'inherit' }}>
+              <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border-color)', borderRadius: '8px', padding: '1.5rem', cursor: 'pointer', transition: 'border-color 0.2s' }}
+                   onMouseOver={e => e.currentTarget.style.borderColor = 'var(--primary-color)'}
+                   onMouseOut={e => e.currentTarget.style.borderColor = 'var(--border-color)'}>
+                <h2 style={{ fontSize: '1.25rem', marginBottom: '0.5rem' }}>{table.displayName}</h2>
+                <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>
+                  {table.columns.length} columns
+                </p>
+              </div>
+            </Link>
           ))}
         </div>
       )}
