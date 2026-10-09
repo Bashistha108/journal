@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:18
+    ports:
+      - "127.0.0.1:5432:5432"
+    environment:
+      POSTGRES_DB: trading_journal
+      POSTGRES_USER: trading_journal
+      POSTGRES_PASSWORD: trading_journal_pass
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  pgdata:
