@@ -7,8 +7,8 @@ public class DisplayNameNormalizer {
         if (displayName == null) {
             return "";
         }
-        String normalized = Normalizer.normalize(displayName, Normalizer.Form.NFKC);
-        // Lowercase, replace multiple spaces with single space, remove non-alphanumeric
-        return normalized.trim().toLowerCase().replaceAll("[^a-z0-9\\s]", "").replaceAll("\\s+", " ");
+        String nfdNormalizedString = Normalizer.normalize(displayName, Normalizer.Form.NFD); 
+        String withoutDiacritics = nfdNormalizedString.replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
+        return withoutDiacritics.trim().toLowerCase().replaceAll("[^a-z0-9\\s]", "").replaceAll("\\s+", " ");
     }
 }

@@ -1,39 +1,48 @@
 # Trading Journal
 
-A local-first application for journaling trades with isolated dynamic schema capabilities.
+A robust, local-first web application for managing trading journals.
 
 ## Prerequisites
+- Java 21+
+- Node.js 18+
+- PostgreSQL 16+
+- Docker (required for running integration and E2E tests)
 
-To run and build this application, you must have the following installed:
-- **Java 21 LTS** (or newer)
-- **Node.js 20+**
-- **PostgreSQL 18** (or Docker, to run the provided `docker-compose.yml`)
-- **Docker** (Required strictly for backend integration testing via Testcontainers)
-
-## Getting Started
-
-1. **Environment Setup:**
-   Copy `.env.example` to `.env` and adjust variables if needed.
-
-2. **Start the Application:**
-   Run the backend and frontend scripts:
-   ```bash
-   ./scripts/start-backend.sh
-   ./scripts/start-frontend.sh
+## Installation & Configuration
+1. Clone this repository.
+2. Create a PostgreSQL database and role:
+   ```sql
+   CREATE USER trading_journal WITH PASSWORD 'trading_journal_pass';
+   CREATE DATABASE trading_journal OWNER trading_journal;
    ```
+3. Copy `.env.example` to `.env` and adjust variables if needed.
 
-3. **Stop the Application:**
-   ```bash
-   ./scripts/stop-application.sh
-   ```
+## Startup
+To start the backend (starts on port 8080 by default):
+```bash
+cd backend
+./gradlew bootRun
+```
 
-4. **Run Tests:**
-   ```bash
-   ./scripts/test-backend.sh
-   ./scripts/test-frontend.sh
-   ```
+To start the frontend (starts on port 5173 by default):
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
-## Documentation
-- Product Rules: `docs/product-specification.md`
-- Database & Architecture: `docs/architecture.md`, `docs/database-design.md`
-- API Contracts: `contracts/openapi.yaml`
+## Testing
+- Backend tests (requires Docker): `cd backend && ./gradlew test`
+- Frontend tests: `cd frontend && npm test`
+- End-to-End tests (requires Docker): `./scripts/test-e2e.sh`
+
+## Backup and Restore
+Use the provided scripts in `scripts/`:
+- **Backup**: `./scripts/backup-database.sh <host> <port> <user> <dbname> <output_file>`
+- **Restore**: `./scripts/restore-database.sh <host> <port> <user> <dbname> <input_file>`
+
+## Troubleshooting
+- **PostgreSQL Unreachable**: Verify the DB is running and credentials match your `.env`.
+- **Port in Use**: Change `TJ_SERVER_PORT` in `.env` or kill the offending process.
+- **Failed Migration**: Check Liquibase logs. Do not manually edit `databasechangelog`.
+- **Schema Consistency Failure**: Ensure no manual schema changes were made. Restore from a backup if necessary.

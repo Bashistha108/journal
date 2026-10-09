@@ -14,3 +14,7 @@ The application enforces a rigid testing model requiring each feature to ship wi
 ## Isolation
 - State must not leak between tests. Database transactions should roll back after each test, or tables should be recreated.
 - File system tests (e.g., image parsing) use fixtures from `src/test/resources/images/`.
+
+## Coverage Thresholds
+- Backend coverage minimum: 90%
+- Frontend coverage minimum: 80%

@@ -100,4 +100,24 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(errorCode.getStatus()).body(error);
     }
+
+    @ExceptionHandler({org.springframework.dao.DataAccessException.class, org.springframework.transaction.CannotCreateTransactionException.class})
+    public ResponseEntity<ApiError> handleDatabaseOutage(Exception ex, HttpServletRequest request) {
+        String requestId = (String) request.getAttribute("requestId");
+        if (requestId == null) {
+            requestId = "unknown";
+        }
+        
+        log.error("Database outage detected [requestId: {}]", requestId, ex);
+        
+        ApiError error = new ApiError(
+                ErrorCode.DATABASE_UNAVAILABLE.getStatus(),
+                ErrorCode.DATABASE_UNAVAILABLE.name(),
+                "The database is currently unavailable. Please try again later.",
+                requestId,
+                List.of()
+        );
+
+        return ResponseEntity.status(ErrorCode.DATABASE_UNAVAILABLE.getStatus()).body(error);
+    }
 }
