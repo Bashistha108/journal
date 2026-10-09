@@ -7,5 +7,11 @@ spring:
     url: jdbc:postgresql://${TJ_DB_HOST:127.0.0.1}:${TJ_DB_PORT:5432}/${TJ_DB_NAME:trading_journal}
     username: ${TJ_DB_USER:trading_journal}
     password: ${TJ_DB_PASSWORD:trading_journal_pass}
+    hikari:
+      connection-timeout: 5000
   liquibase:
-    enabled: false # Disabled in Phase 1 until Liquibase setup in Phase 2
+    enabled: true
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+    liquibase-schema: public
+    default-schema: tj_meta
+    drop-first: false
