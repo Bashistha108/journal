@@ -32,4 +32,72 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(ErrorCode.INTERNAL_ERROR.getStatus()).body(error);
     }
+
+    @ExceptionHandler(ValidationException.class)
+    public ResponseEntity<ApiError> handleValidationException(ValidationException ex, HttpServletRequest request) {
+        String requestId = (String) request.getAttribute("requestId");
+        if (requestId == null) {
+            requestId = "unknown";
+        }
+        
+        ApiError error = new ApiError(
+                ErrorCode.VALIDATION_FAILED.getStatus(),
+                ErrorCode.VALIDATION_FAILED.name(),
+                "Validation failed.",
+                requestId,
+                ex.getFieldErrors()
+        );
+
+        return ResponseEntity.status(ErrorCode.VALIDATION_FAILED.getStatus()).body(error);
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ApiError> handleNotFound(ResourceNotFoundException ex, HttpServletRequest request) {
+        String requestId = (String) request.getAttribute("requestId");
+        if (requestId == null) {
+            requestId = "unknown";
+        }
+        
+        ErrorCode errorCode;
+        try {
+            errorCode = ErrorCode.valueOf(ex.getCode());
+        } catch (IllegalArgumentException e) {
+            errorCode = ErrorCode.INTERNAL_ERROR;
+        }
+
+        ApiError error = new ApiError(
+                errorCode.getStatus(),
+                errorCode.name(),
+                ex.getMessage(),
+                requestId,
+                List.of()
+        );
+
+        return ResponseEntity.status(errorCode.getStatus()).body(error);
+    }
+
+    @ExceptionHandler(ConflictException.class)
+    public ResponseEntity<ApiError> handleConflict(ConflictException ex, HttpServletRequest request) {
+        String requestId = (String) request.getAttribute("requestId");
+        if (requestId == null) {
+            requestId = "unknown";
+        }
+        
+        ErrorCode errorCode;
+        try {
+            errorCode = ErrorCode.valueOf(ex.getCode());
+        } catch (IllegalArgumentException e) {
+            errorCode = ErrorCode.INTERNAL_ERROR;
+        }
+
+        ApiError error = new ApiError(
+                errorCode.getStatus(),
+                errorCode.name(),
+                ex.getMessage(),
+                requestId,
+                List.of()
+        );
+
+        return ResponseEntity.status(errorCode.getStatus()).body(error);
+    }
 }

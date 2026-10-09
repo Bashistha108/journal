@@ -1,5 +1,5 @@
 import React from 'react';
-import { ApiError } from '../../types/api';
+import type { ApiError } from '../../types/api';
 
 interface ErrorMessageProps {
     error: ApiError | null;
