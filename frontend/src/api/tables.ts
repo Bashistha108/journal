@@ -1,33 +1,7 @@
 import { fetchClient } from './httpClient';
+import type { TableDetail, CreateTableRequest, CreateColumnRequest, ColumnDetail, SelectOption } from '../types/table';
 
-export interface SelectOption {
-    id: number;
-    value: string;
-}
-
-export interface ColumnDetail {
-    id: number;
-    displayName: string;
-    dataType: string;
-    selectOptions: SelectOption[];
-}
-
-export interface TableDetail {
-    id: number;
-    displayName: string;
-    columns: ColumnDetail[];
-}
-
-export interface CreateColumnRequest {
-    name: string;
-    dataType: string;
-    selectOptions?: string[];
-}
-
-export interface CreateTableRequest {
-    name: string;
-    columns: CreateColumnRequest[];
-}
+export type { TableDetail, CreateTableRequest, CreateColumnRequest, ColumnDetail, SelectOption };
 
 export const tableApi = {
     listTables: () => fetchClient<TableDetail[]>('/tables', { method: 'GET' }),
