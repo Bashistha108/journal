@@ -1,1 +1,22 @@
 plan.md
+
+# Build output
+node_modules/
+dist/
+build/
+.gradle/
+
+# IDE and runtime
+.run/
+.idea/
+*.iml
+.vscode/
+
+# Environment variables
+.env
+.env.local
+
+# Test artifacts
+coverage/
+playwright-report/
+test-results/
