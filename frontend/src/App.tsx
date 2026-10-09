@@ -1,20 +1,14 @@
-import React from 'react';
-import { Routes, Route } from 'react-router-dom';
-
-function Home() {
-  return (
-    <div>
-      <h1>Trading Journal</h1>
-      <p>Frontend skeleton is running independently.</p>
-    </div>
-  );
-}
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import TableManagementPage from './pages/TableManagementPage';
 
 function App() {
   return (
-    <Routes>
-      <Route path="/" element={<Home />} />
-    </Routes>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Navigate to="/tables" replace />} />
+        <Route path="/tables" element={<TableManagementPage />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
