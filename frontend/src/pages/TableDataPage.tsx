@@ -7,6 +7,7 @@ import { DataTable } from '../components/rows/DataTable';
 import { FilterBuilder } from '../components/filter/FilterBuilder';
 import { PaginationControls } from '../components/filter/PaginationControls';
 import RowFormDialog from '../components/rows/RowFormDialog';
+import AddColumnModal from '../components/AddColumnModal';
 import { rowApi } from '../api/rowApi';
 import { Plus, Loader2, AlertCircle } from 'lucide-react';
 
@@ -16,6 +17,7 @@ export default function TableDataPage() {
 
     const [table, setTable] = useState<TableDetail | null>(null);
     const [isCreateOpen, setIsCreateOpen] = useState(false);
+    const [isAddColumnOpen, setIsAddColumnOpen] = useState(false);
 
     const { query, data, loading, error, setPage, setSort, setFilters, refresh } = useTableQuery(id);
 
@@ -31,14 +33,21 @@ export default function TableDataPage() {
     );
 
     return (
-        <div className="min-h-full bg-[#121212] text-neutral-200">
-            <div className="p-8">
+        <div className="flex-1 flex flex-col min-h-0 min-w-0 bg-[#121212] text-neutral-200">
+            <div className="px-8 pt-8 pb-0 flex-1 flex flex-col min-h-0 min-w-0">
                 <div className="flex justify-between items-start mb-8">
                     <div className="flex flex-col">
                         <h1 className="text-[22px] font-bold text-white tracking-tight">{table.displayName}</h1>
                         <p className="text-[13px] text-neutral-400 mt-1">View and manage table records</p>
                     </div>
                     <div className="flex items-center gap-3">
+                        <button
+                            onClick={() => setIsAddColumnOpen(true)}
+                            className="btn-secondary flex items-center gap-2"
+                        >
+                            <Plus className="w-4 h-4" />
+                            Add Column
+                        </button>
                         <button
                             onClick={() => setIsCreateOpen(true)}
                             className="btn-primary flex items-center gap-2"
@@ -49,7 +58,7 @@ export default function TableDataPage() {
                     </div>
                 </div>
 
-                <div className="bg-[#1c1c1c] rounded-xl border border-[#2e2e2e] flex flex-col min-h-[calc(100vh-10rem)]">
+                <div className="bg-[#1c1c1c] rounded-t-xl border border-[#2e2e2e] border-b-0 flex flex-col flex-1 min-h-0 min-w-0">
                     <FilterBuilder
                         columns={table.columns}
                         filters={query.filters || []}
@@ -63,7 +72,7 @@ export default function TableDataPage() {
                         </div>
                     )}
 
-                    <div className="relative flex-1 flex flex-col min-h-0">
+                    <div className="relative flex-1 flex flex-col min-h-0 min-w-0">
                         {loading && (
                             <div className="absolute inset-0 bg-[#1c1c1c]/50 backdrop-blur-[2px] flex items-center justify-center z-10">
                                 <Loader2 className="animate-spin h-6 w-6 text-yellow-400" />
@@ -78,7 +87,7 @@ export default function TableDataPage() {
                         />
                     </div>
 
-                    <div className="border-t border-[#2e2e2e] bg-[#1c1c1c] rounded-b-xl mt-auto">
+                    <div className="border-t border-[#2e2e2e] bg-[#1c1c1c] rounded-b-xl mt-auto z-10">
                         <PaginationControls
                             response={data}
                             onPageChange={setPage}
@@ -98,6 +107,17 @@ export default function TableDataPage() {
                         refresh();
                     }}
                     onClose={() => setIsCreateOpen(false)}
+                />
+            )}
+
+            {isAddColumnOpen && (
+                <AddColumnModal
+                    tableId={table.id}
+                    onClose={() => setIsAddColumnOpen(false)}
+                    onSuccess={() => {
+                        setIsAddColumnOpen(false);
+                        tableApi.getTable(id).then(setTable).catch(console.error);
+                    }}
                 />
             )}
         </div>

@@ -49,7 +49,7 @@ export const AppLayout: React.FC = () => {
             </aside>
 
             {/* Main Content */}
-            <main className="flex-1 overflow-auto bg-[#121212]">
+            <main className="flex-1 flex flex-col min-w-0 min-h-0 overflow-hidden bg-[#121212]">
                 <Outlet />
             </main>
         </div>

@@ -24,6 +24,31 @@ export default function CreateTableModal({ onClose, onSuccess }: CreateTableModa
     setColumns(columns.filter((_, i) => i !== index));
   };
 
+  const [draggedIdx, setDraggedIdx] = useState<number | null>(null);
+
+  const handleDragStart = (e: React.DragEvent<HTMLTableRowElement>, index: number) => {
+    setDraggedIdx(index);
+    e.dataTransfer.effectAllowed = 'move';
+  };
+
+  const handleDragOver = (e: React.DragEvent<HTMLTableRowElement>) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLTableRowElement>, index: number) => {
+    e.preventDefault();
+    if (draggedIdx === null || draggedIdx === index) {
+      setDraggedIdx(null);
+      return;
+    }
+    const newCols = [...columns];
+    const draggedItem = newCols.splice(draggedIdx, 1)[0];
+    newCols.splice(index, 0, draggedItem);
+    setColumns(newCols);
+    setDraggedIdx(null);
+  };
+
   const updateColumn = (index: number, field: keyof CreateColumnRequest, value: any) => {
     const newCols = [...columns];
     newCols[index] = { ...newCols[index], [field]: value };
@@ -47,9 +72,9 @@ export default function CreateTableModal({ onClose, onSuccess }: CreateTableModa
       await tableApi.createTable({ name, columns: cleanedColumns });
       onSuccess();
     } catch (err: any) {
-      if (err.fields && err.fields.length > 0) {
+      if (err.fieldErrors && err.fieldErrors.length > 0) {
         const fErrors: Record<string, string> = {};
-        err.fields.forEach((f: any) => {
+        err.fieldErrors.forEach((f: any) => {
           fErrors[f.field] = f.message;
         });
         setFieldErrors(fErrors);
@@ -124,10 +149,17 @@ export default function CreateTableModal({ onClose, onSuccess }: CreateTableModa
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#2e2e2e]">
-                  {/* Dynamic Columns */}
                   {columns.map((col, idx) => (
-                    <tr key={idx} className="bg-[#121212] group">
-                      <td className="px-4 py-3 text-neutral-600"><GripVertical className="w-4 h-4 cursor-grab" /></td>
+                    <tr 
+                      key={idx} 
+                      draggable 
+                      onDragStart={(e) => handleDragStart(e, idx)}
+                      onDragOver={(e) => handleDragOver(e)}
+                      onDrop={(e) => handleDrop(e, idx)}
+                      onDragEnd={() => setDraggedIdx(null)}
+                      className={`bg-[#121212] group ${draggedIdx === idx ? 'opacity-50' : 'opacity-100'} hover:bg-[#1a1a1a] transition-all`}
+                    >
+                      <td className="px-4 py-3 text-neutral-600"><GripVertical className="w-4 h-4 cursor-grab active:cursor-grabbing" /></td>
                       <td className="px-4 py-3">
                         <input 
                           type="text" 

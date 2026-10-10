@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import type { TableDetail, ColumnDetail } from '../../types/table';
 import type { RowDetail } from '../../types/row';
-import type { AttachmentMetadata } from '../../types/attachment';
+// import type { AttachmentMetadata } from '../../types/attachment';
 import { attachmentApi } from '../../api/attachmentApi';
 
 interface Props {
@@ -18,10 +18,7 @@ const isValidUrl = (val: string) => {
     }
 };
 
-const isImageUrl = (val: string) => {
-    if (!isValidUrl(val)) return false;
-    return /\.(jpeg|jpg|gif|png|webp|svg)(\?.*)?$/i.test(val);
-};
+
 
 export const RowDetailsView: React.FC<Props> = ({ table, row }) => {
     // Group attachments by column
@@ -37,7 +34,7 @@ export const RowDetailsView: React.FC<Props> = ({ table, row }) => {
 
     const renderFieldValue = (col: ColumnDetail, val: any) => {
         if (val === null || val === undefined || val === '') {
-            return null; // Don't render empty fields
+            return <span className="text-neutral-600 italic">-</span>; // Render empty fields with a dash
         }
 
         if (col.dataType === 'BOOLEAN') {
@@ -76,7 +73,7 @@ export const RowDetailsView: React.FC<Props> = ({ table, row }) => {
     const activeImage = allImageAttachments[activeImageIdx];
 
     return (
-        <div className="space-y-12 pb-12 w-full max-w-[1200px] mx-auto">
+        <div className="space-y-12 pb-12 w-full mx-auto">
             {allImageAttachments.length > 0 && (
                 <div className="bg-[#1c1c1c] border border-[#2e2e2e] rounded-xl overflow-hidden shadow-lg">
                     <div className="p-4 border-b border-[#2e2e2e] flex justify-between items-center bg-[#252525]">
@@ -128,9 +125,8 @@ export const RowDetailsView: React.FC<Props> = ({ table, row }) => {
 
             <div className="bg-[#1c1c1c] border border-[#2e2e2e] rounded-xl shadow-lg">
                 <dl className="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:gap-px bg-[#2e2e2e]">
-                    {dataColumns.map((col, idx) => {
+                    {dataColumns.map((col) => {
                         const val = row.values[col.id];
-                        if (val === null || val === undefined || val === '') return null;
                         
                         return (
                             <div 
