@@ -81,8 +81,6 @@ public class RowQueryService {
     private RowListItem mapRow(ResultSet rs, List<ColumnRegistry> columns) throws SQLException {
         Long id = rs.getLong("id");
         Long version = rs.getLong("row_version");
-        OffsetDateTime createdAt = rs.getObject("created_at", OffsetDateTime.class);
-        OffsetDateTime updatedAt = rs.getObject("updated_at", OffsetDateTime.class);
 
         Map<Long, Object> values = new HashMap<>();
         Map<Long, Integer> attachmentCounts = new HashMap<>();

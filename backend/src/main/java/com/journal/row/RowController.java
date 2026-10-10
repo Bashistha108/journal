@@ -46,7 +46,7 @@ public class RowController {
         return rowService.updateRow(tableId, rowId, request, null);
     }
 
-    @PatchMapping(value = "/{rowId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/{rowId}/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public RowDetail updateRowMultipart(@PathVariable Long tableId, @PathVariable Long rowId,
                                         @RequestPart("row") RowSaveRequest request,
                                         MultipartHttpServletRequest multipartRequest) {

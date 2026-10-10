@@ -26,12 +26,20 @@ public class FieldValueConverter {
                 return value.toString().trim();
                 
             case "INTEGER":
-                if (value instanceof Integer) {
+                if (value instanceof Long) {
                     return value;
+                } else if (value instanceof Integer) {
+                    return ((Integer) value).longValue();
                 } else if (value instanceof Number) {
                     Number num = (Number) value;
-                    if (num.doubleValue() == num.intValue()) {
-                        return num.intValue();
+                    if (num.doubleValue() == num.longValue()) {
+                        return num.longValue();
+                    }
+                } else if (value instanceof String) {
+                    try {
+                        return Long.parseLong((String) value);
+                    } catch (NumberFormatException e) {
+                        return null;
                     }
                 }
                 return null;
@@ -55,7 +63,13 @@ public class FieldValueConverter {
             case "DATE":
                 if (value instanceof String) {
                     try {
-                        LocalDate d = LocalDate.parse((String) value);
+                        String s = (String) value;
+                        LocalDate d;
+                        if (s.contains(".")) {
+                            d = LocalDate.parse(s, DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+                        } else {
+                            d = LocalDate.parse(s);
+                        }
                         if (d.getYear() < 1 || d.getYear() > 9999) return null;
                         return d;
                     } catch (DateTimeParseException e) {
@@ -67,7 +81,13 @@ public class FieldValueConverter {
             case "DATETIME":
                 if (value instanceof String) {
                     try {
-                        LocalDateTime dt = LocalDateTime.parse((String) value, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+                        String s = (String) value;
+                        LocalDateTime dt;
+                        if (s.contains(".")) {
+                            dt = LocalDateTime.parse(s, DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss"));
+                        } else {
+                            dt = LocalDateTime.parse(s, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+                        }
                         if (dt.getYear() < 1 || dt.getYear() > 9999) return null;
                         return dt;
                     } catch (DateTimeParseException e) {
@@ -101,16 +121,16 @@ public class FieldValueConverter {
                 return jdbcValue;
             case "DATE":
                 if (jdbcValue instanceof LocalDate) {
-                    return ((LocalDate) jdbcValue).format(DateTimeFormatter.ISO_LOCAL_DATE);
+                    return ((LocalDate) jdbcValue).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
                 } else if (jdbcValue instanceof java.sql.Date) {
-                    return ((java.sql.Date) jdbcValue).toLocalDate().format(DateTimeFormatter.ISO_LOCAL_DATE);
+                    return ((java.sql.Date) jdbcValue).toLocalDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
                 }
                 return jdbcValue.toString();
             case "DATETIME":
                 if (jdbcValue instanceof LocalDateTime) {
-                    return ((LocalDateTime) jdbcValue).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+                    return ((LocalDateTime) jdbcValue).format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss"));
                 } else if (jdbcValue instanceof java.sql.Timestamp) {
-                    return ((java.sql.Timestamp) jdbcValue).toLocalDateTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+                    return ((java.sql.Timestamp) jdbcValue).toLocalDateTime().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss"));
                 }
                 return jdbcValue.toString();
             case "IMAGE":

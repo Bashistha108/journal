@@ -75,7 +75,7 @@ public class DynamicSchemaService {
             case "BOOLEAN" -> "BOOLEAN";
             case "DATE" -> "DATE";
             case "DATETIME" -> "TIMESTAMP WITH TIME ZONE";
-            case "SELECT" -> "BIGINT";
+            case "SELECT" -> "TEXT";
             case "IMAGE" -> null;
             default -> throw new IllegalArgumentException("Unknown type: " + apiType);
         };

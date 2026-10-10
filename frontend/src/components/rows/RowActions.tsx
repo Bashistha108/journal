@@ -5,6 +5,7 @@ import type { ColumnDetail } from '../../types/table';
 import { rowApi } from '../../api/rowApi';
 import RowFormDialog from './RowFormDialog';
 import DeleteRowDialog from './DeleteRowDialog';
+import { Eye, Edit2, Trash2 } from 'lucide-react';
 
 interface RowActionsProps {
     tableId: number;
@@ -41,26 +42,28 @@ const RowActions: React.FC<RowActionsProps> = ({ tableId, row, columns, onRowUpd
     };
 
     return (
-        <div className="flex gap-3">
+        <div className="flex items-center justify-end gap-4 text-neutral-400">
+            <Link
+                to={`/tables/${tableId}/rows/${row.id}`}
+                className="hover:text-white transition-colors"
+                title="View Details"
+            >
+                <Eye className="w-4 h-4" />
+            </Link>
             <button
                 onClick={handleEditClick}
-                className="text-sm text-blue-400 hover:text-blue-300 font-medium transition-colors"
+                className="hover:text-white transition-colors"
+                title="Edit Row"
             >
-                Edit
+                <Edit2 className="w-4 h-4" />
             </button>
             <button
                 onClick={() => setIsDeleteOpen(true)}
-                className="text-sm text-red-400 hover:text-red-300 font-medium transition-colors"
+                className="hover:text-red-400 transition-colors"
+                title="Delete Row"
             >
-                Delete
+                <Trash2 className="w-4 h-4" />
             </button>
-            <Link
-                to={`/tables/${tableId}/rows/${row.id}`}
-                className="text-sm text-gray-400 hover:text-gray-300 font-medium transition-colors"
-                title="View Details"
-            >
-                Details
-            </Link>
 
             {isEditOpen && detail && (
                 <RowFormDialog

@@ -5,7 +5,7 @@ server:
 spring:
   datasource:
     url: jdbc:postgresql://${TJ_DB_HOST:127.0.0.1}:${TJ_DB_PORT:5432}/${TJ_DB_NAME:trading_journal}
-    username: ${TJ_DB_USER:trading_journal}
+    username: ${TJ_DB_USER:POSTGRES}
     password: ${TJ_DB_PASSWORD:trading_journal_pass}
     hikari:
       connection-timeout: 5000
