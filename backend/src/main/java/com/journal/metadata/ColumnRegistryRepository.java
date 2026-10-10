@@ -32,6 +32,14 @@ public class ColumnRegistryRepository {
     );
 
     public ColumnRegistry save(ColumnRegistry column) {
+        if (column.columnId() != null) {
+            jdbcTemplate.update(
+                    "UPDATE tj_meta.column_registry SET table_id = ?, position = ?, display_name = ?, normalized_name = ?, data_type = ?, physical_name = ? WHERE column_id = ?",
+                    column.tableId(), column.position(), column.displayName(), column.normalizedName(), column.dataType(), column.physicalName(), column.columnId()
+            );
+            return findById(column.columnId()).orElseThrow();
+        }
+
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(

@@ -6,6 +6,7 @@ import { validateField } from '../../validation/fieldValidation';
 import type { ApiError } from '../../types/api';
 import type { AttachmentUpload } from '../../types/attachment';
 import AttachmentPicker from '../attachments/AttachmentPicker';
+import { Loader2 } from 'lucide-react';
 
 interface DynamicRowFormProps {
     columns: ColumnDetail[];
@@ -27,11 +28,19 @@ const DynamicRowForm: React.FC<DynamicRowFormProps> = ({ columns, initialData, o
         if (initialData) {
             setValues(initialData.values || {});
         } else {
-            setValues({});
+            const initialVals: Record<number, any> = {};
+            columns.forEach(col => {
+                if (col.dataType === 'BOOLEAN') {
+                    initialVals[col.id] = true;
+                } else if (col.dataType === 'SELECT' && col.selectOptions && col.selectOptions.length > 0) {
+                    initialVals[col.id] = col.selectOptions[0].value;
+                }
+            });
+            setValues(initialVals);
         }
         setNewAttachments([]);
         setRemoveAttachmentIds([]);
-    }, [initialData]);
+    }, [initialData, columns]);
 
     useEffect(() => {
         if (apiError && apiError.fieldErrors) {
@@ -148,21 +157,26 @@ const DynamicRowForm: React.FC<DynamicRowFormProps> = ({ columns, initialData, o
                 </div>
             )}
             
-            <div className="flex justify-end gap-3 mt-6 pt-4 border-t border-gray-800">
+            <div className="flex justify-end gap-3 mt-8 pt-6 border-t border-[#2e2e2e]">
                 <button
                     type="button"
                     onClick={onCancel}
-                    className="px-4 py-2 text-gray-300 hover:text-white transition-colors"
+                    className="btn-secondary"
                     disabled={isSubmitting}
                 >
                     Cancel
                 </button>
                 <button
                     type="submit"
-                    className="px-4 py-2 bg-white text-black font-medium rounded hover:bg-gray-200 transition-colors disabled:opacity-50"
+                    className="btn-primary min-w-[140px]"
                     disabled={isSubmitting}
                 >
-                    {isSubmitting ? 'Saving...' : 'Save'}
+                    {isSubmitting ? (
+                        <span className="flex items-center justify-center gap-2">
+                            <Loader2 className="animate-spin w-4 h-4" />
+                            Saving...
+                        </span>
+                    ) : 'Save Record'}
                 </button>
             </div>
         </form>

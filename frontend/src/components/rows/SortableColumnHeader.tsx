@@ -18,13 +18,13 @@ export const SortableColumnHeader: React.FC<Props> = ({ column, currentSort, onS
 
     return (
         <th 
-            className="p-3 text-left font-medium text-slate-300 border-b border-slate-700 cursor-pointer hover:bg-slate-800 transition-colors"
+            className="px-6 py-4 text-left font-medium text-neutral-400 cursor-pointer hover:text-white transition-colors group"
             onClick={handleClick}
         >
-            <div className="flex items-center gap-1">
-                {column.displayName}
-                <span className="text-slate-500 w-4">
-                    {isSorted ? (isAsc ? '↑' : '↓') : '↕'}
+            <div className="flex items-center gap-1.5">
+                <span>{column.displayName}</span>
+                <span className="text-neutral-600 group-hover:text-neutral-400 transition-colors w-4 flex items-center justify-center">
+                    {isSorted ? (isAsc ? '↑' : '↓') : ''}
                 </span>
             </div>
         </th>

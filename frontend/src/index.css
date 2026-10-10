@@ -1,106 +1,47 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-:root {
-  --bg-color: #000000;
-  --text-color: #e5e5e5;
-  --text-muted: #a3a3a3;
-  --accent-color: #3b82f6;
-  --accent-hover: #2563eb;
-  --border-color: #262626;
-  --card-bg: #0a0a0a;
-  --input-bg: #171717;
-  --danger-color: #ef4444;
-  --danger-hover: #dc2626;
+@layer base {
+  body {
+    @apply bg-[#0a0a0a] text-neutral-200 antialiased font-sans;
+  }
 }
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2 rounded-md font-semibold text-sm transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a0a] disabled:opacity-50 disabled:pointer-events-none;
+  }
+
+  .btn-primary {
+    @apply btn bg-[#facc15] text-[#000000] hover:bg-[#eab308] shadow-sm;
+  }
+
+  .btn-secondary {
+    @apply btn bg-neutral-800 text-neutral-200 hover:bg-neutral-700 border border-neutral-700 shadow-sm;
+  }
+
+  .btn-danger {
+    @apply btn bg-transparent text-red-400 hover:bg-red-950 hover:text-red-300 border border-red-900/50;
+  }
+
+  .input-field {
+    @apply w-full bg-neutral-900 border border-neutral-800 text-neutral-200 text-sm rounded-md px-3 py-2 outline-none focus:border-yellow-400/50 focus:ring-1 focus:ring-yellow-400/50 transition-all placeholder:text-neutral-600;
+  }
+
+  .card {
+    @apply bg-[#121212] border border-neutral-800/60 rounded-xl overflow-hidden;
+  }
 }
 
-body {
-  font-family: 'Inter', sans-serif;
-  background-color: var(--bg-color);
-  color: var(--text-color);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-button {
-  cursor: pointer;
-  font-family: inherit;
-  border: none;
-  background: none;
-  outline: none;
-}
-
-input, select {
-  font-family: inherit;
-  background: var(--input-bg);
-  border: 1px solid var(--border-color);
-  color: var(--text-color);
-  padding: 0.5rem 0.75rem;
-  border-radius: 4px;
-  outline: none;
-  width: 100%;
-}
-
-input:focus, select:focus {
-  border-color: var(--accent-color);
-}
-
-.btn {
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  font-weight: 500;
-  transition: background-color 0.2s;
-}
-
-.btn-primary {
-  background-color: var(--accent-color);
-  color: #fff;
-}
-.btn-primary:hover {
-  background-color: var(--accent-hover);
-}
-
-.btn-secondary {
-  background-color: var(--input-bg);
-  color: var(--text-color);
-  border: 1px solid var(--border-color);
-}
-.btn-secondary:hover {
-  background-color: #262626;
-}
-
-.btn-danger {
-  background-color: transparent;
-  color: var(--danger-color);
-  border: 1px solid var(--danger-color);
-}
-.btn-danger:hover {
-  background-color: var(--danger-color);
-  color: #fff;
-}
-
-/* Modal styles */
+/* Modal specific (for legacy modals if not using tailwind utility classes fully yet) */
 .modal-overlay {
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0, 0, 0, 0.7);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 50;
+  @apply fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4;
 }
+
 .modal-content {
-  background: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  padding: 1.5rem;
-  width: 100%;
-  max-width: 500px;
-  max-height: 90vh;
-  overflow-y: auto;
+  @apply card p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl relative;
 }
+

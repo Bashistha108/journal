@@ -29,11 +29,11 @@ export const FilterBuilder: React.FC<Props> = ({ columns, filters, onChange }) =
     };
 
     return (
-        <div className="flex flex-col gap-2 p-4 bg-slate-900 border-b border-slate-800">
+        <div className="flex flex-col gap-3 p-6 bg-transparent">
             <div className="flex justify-between items-center">
-                <h3 className="text-sm font-medium text-slate-300">Filters</h3>
+                <h3 className="text-sm font-semibold text-neutral-300">Filters</h3>
                 <button
-                    className="text-xs bg-indigo-600 hover:bg-indigo-500 text-white px-2 py-1 rounded disabled:opacity-50"
+                    className="text-xs bg-white/10 hover:bg-white/20 text-white font-medium px-3 py-1.5 rounded-lg transition-colors disabled:opacity-50 border border-white/5"
                     disabled={filters.length >= 20 || columns.length === 0}
                     onClick={addFilter}
                 >
@@ -41,9 +41,9 @@ export const FilterBuilder: React.FC<Props> = ({ columns, filters, onChange }) =
                 </button>
             </div>
             {filters.length === 0 ? (
-                <p className="text-sm text-slate-500 italic">No filters applied.</p>
+                <p className="text-sm text-neutral-500 italic mt-1">No filters applied.</p>
             ) : (
-                <div className="flex flex-col gap-2 mt-2">
+                <div className="flex flex-col gap-3 mt-3">
                     {filters.map((f, i) => (
                         <FilterRow
                             key={i}
@@ -73,9 +73,9 @@ const FilterRow: React.FC<RowProps> = ({ filter, columns, onChange, onRemove }) 
     const ops = getOperatorsForType(column.dataType);
 
     return (
-        <div className="flex items-center gap-2 text-sm">
+        <div className="flex items-center gap-3 text-sm flex-wrap sm:flex-nowrap">
             <select
-                className="bg-slate-800 border border-slate-700 rounded p-1 text-slate-200"
+                className="input-field py-2 text-sm !w-auto bg-black"
                 value={filter.columnId}
                 onChange={e => {
                     const newColId = Number(e.target.value);
@@ -89,7 +89,7 @@ const FilterRow: React.FC<RowProps> = ({ filter, columns, onChange, onRemove }) 
             </select>
 
             <select
-                className="bg-slate-800 border border-slate-700 rounded p-1 text-slate-200"
+                className="input-field py-2 text-sm !w-auto bg-black"
                 value={filter.operator}
                 onChange={e => onChange({ operator: e.target.value as FilterOperator })}
             >
@@ -99,7 +99,7 @@ const FilterRow: React.FC<RowProps> = ({ filter, columns, onChange, onRemove }) 
             {needsValue(filter.operator) && (
                 <input
                     type="text"
-                    className="bg-slate-800 border border-slate-700 rounded p-1 text-slate-200 flex-1 min-w-0"
+                    className="input-field py-2 text-sm flex-1 min-w-[150px]"
                     value={filter.value || ''}
                     onChange={e => onChange({ value: e.target.value })}
                     placeholder="Value..."
@@ -110,15 +110,15 @@ const FilterRow: React.FC<RowProps> = ({ filter, columns, onChange, onRemove }) 
                 <>
                     <input
                         type="text"
-                        className="bg-slate-800 border border-slate-700 rounded p-1 text-slate-200 flex-1 min-w-0 w-24"
+                        className="input-field py-2 text-sm flex-1 min-w-0 w-24"
                         value={filter.from || ''}
                         onChange={e => onChange({ from: e.target.value })}
                         placeholder="From..."
                     />
-                    <span className="text-slate-500">and</span>
+                    <span className="text-neutral-500 font-medium">and</span>
                     <input
                         type="text"
-                        className="bg-slate-800 border border-slate-700 rounded p-1 text-slate-200 flex-1 min-w-0 w-24"
+                        className="input-field py-2 text-sm flex-1 min-w-0 w-24"
                         value={filter.to || ''}
                         onChange={e => onChange({ to: e.target.value })}
                         placeholder="To..."
@@ -127,11 +127,11 @@ const FilterRow: React.FC<RowProps> = ({ filter, columns, onChange, onRemove }) 
             )}
 
             <button
-                className="text-slate-400 hover:text-red-400 ml-auto"
+                className="w-9 h-9 flex items-center justify-center text-neutral-500 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors ml-auto sm:ml-0"
                 onClick={onRemove}
                 title="Remove filter"
             >
-                ✕
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
             </button>
         </div>
     );

@@ -7,9 +7,8 @@ import { DataTable } from '../components/rows/DataTable';
 import { FilterBuilder } from '../components/filter/FilterBuilder';
 import { PaginationControls } from '../components/filter/PaginationControls';
 import RowFormDialog from '../components/rows/RowFormDialog';
-import BackNavigation from '../components/common/BackNavigation';
-import { routes } from '../app/navigation';
 import { rowApi } from '../api/rowApi';
+import { Plus, Loader2, AlertCircle } from 'lucide-react';
 
 export default function TableDataPage() {
     const { tableId } = useParams<{ tableId: string }>();
@@ -25,25 +24,32 @@ export default function TableDataPage() {
         tableApi.getTable(id).then(setTable).catch(console.error);
     }, [id]);
 
-    if (!table) return <div className="p-8 text-slate-300">Loading table...</div>;
+    if (!table) return (
+        <div className="flex h-full items-center justify-center text-neutral-400 bg-[#121212]">
+            <Loader2 className="w-8 h-8 animate-spin" />
+        </div>
+    );
 
     return (
-        <div className="min-h-screen bg-slate-950 text-slate-200 p-8">
-            <div className="max-w-7xl mx-auto space-y-6">
-                <div className="flex justify-between items-center">
-                    <div>
-                        <BackNavigation to={routes.tables()} label="Back to Tables" />
-                        <h1 className="text-3xl font-bold">{table.displayName}</h1>
+        <div className="min-h-full bg-[#121212] text-neutral-200">
+            <div className="p-8">
+                <div className="flex justify-between items-start mb-8">
+                    <div className="flex flex-col">
+                        <h1 className="text-[22px] font-bold text-white tracking-tight">{table.displayName}</h1>
+                        <p className="text-[13px] text-neutral-400 mt-1">View and manage table records</p>
                     </div>
-                    <button
-                        onClick={() => setIsCreateOpen(true)}
-                        className="bg-indigo-600 hover:bg-indigo-500 px-4 py-2 rounded font-medium transition-colors"
-                    >
-                        + Add Record
-                    </button>
+                    <div className="flex items-center gap-3">
+                        <button
+                            onClick={() => setIsCreateOpen(true)}
+                            className="btn-primary flex items-center gap-2"
+                        >
+                            <Plus className="w-4 h-4" />
+                            Add Row
+                        </button>
+                    </div>
                 </div>
 
-                <div className="bg-slate-900 border border-slate-700 rounded-lg overflow-hidden">
+                <div className="bg-[#1c1c1c] rounded-xl border border-[#2e2e2e] flex flex-col min-h-[calc(100vh-10rem)]">
                     <FilterBuilder
                         columns={table.columns}
                         filters={query.filters || []}
@@ -51,15 +57,16 @@ export default function TableDataPage() {
                     />
 
                     {error && (
-                        <div className="p-4 bg-red-900/50 text-red-200 border-b border-red-800">
-                            {error}
+                        <div className="px-6 py-4 bg-red-950/50 border-y border-red-900/50 flex items-center gap-3 text-red-200 text-sm">
+                            <AlertCircle className="w-4 h-4" />
+                            <span>{error}</span>
                         </div>
                     )}
 
-                    <div className="relative">
+                    <div className="relative flex-1 flex flex-col min-h-0">
                         {loading && (
-                            <div className="absolute inset-0 bg-slate-950/50 flex items-center justify-center z-10">
-                                <span className="text-indigo-400">Loading...</span>
+                            <div className="absolute inset-0 bg-[#1c1c1c]/50 backdrop-blur-[2px] flex items-center justify-center z-10">
+                                <Loader2 className="animate-spin h-6 w-6 text-yellow-400" />
                             </div>
                         )}
                         <DataTable
@@ -71,10 +78,12 @@ export default function TableDataPage() {
                         />
                     </div>
 
-                    <PaginationControls
-                        response={data}
-                        onPageChange={setPage}
-                    />
+                    <div className="border-t border-[#2e2e2e] bg-[#1c1c1c] rounded-b-xl mt-auto">
+                        <PaginationControls
+                            response={data}
+                            onPageChange={setPage}
+                        />
+                    </div>
                 </div>
             </div>
 
