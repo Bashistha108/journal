@@ -9,7 +9,7 @@ interface Props {
 export const PaginationControls: React.FC<Props> = ({ response, onPageChange }) => {
     if (!response) return null;
 
-    const { page, totalPages, totalItems, pageSize } = response;
+    const { page, totalPages, totalItems } = response;
     const maxPages = Math.max(1, totalPages);
 
     const getVisiblePages = () => {

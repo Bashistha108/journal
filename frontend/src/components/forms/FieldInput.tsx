@@ -10,7 +10,7 @@ interface FieldInputProps {
 }
 
 const FieldInput: React.FC<FieldInputProps> = ({ column, value, onChange, error }) => {
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         const val = e.target.value;
         if (column.dataType === 'BOOLEAN') {
             onChange(val === '' ? null : val === 'true');

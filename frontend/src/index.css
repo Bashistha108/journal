@@ -8,6 +8,31 @@
   body {
     @apply bg-[#0a0a0a] text-neutral-200 antialiased font-sans;
   }
+
+  /* Global Scrollbar Styles (for Firefox and modern browsers) */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #3e3e3e transparent;
+  }
+
+  /* Custom Scrollbars (Webkit/Chrome/Safari) */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #3e3e3e;
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #4e4e4e;
+  }
+  ::-webkit-scrollbar-corner {
+    background: transparent;
+  }
 }
 
 @layer components {

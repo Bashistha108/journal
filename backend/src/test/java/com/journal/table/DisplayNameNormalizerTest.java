@@ -11,5 +11,7 @@ class DisplayNameNormalizerTest {
         assertEquals("cafe", DisplayNameNormalizer.normalize("Café"));
         assertEquals("hello world", DisplayNameNormalizer.normalize("  hello   world  "));
         assertEquals("", DisplayNameNormalizer.normalize("!!!"));
+        assertEquals("a+", DisplayNameNormalizer.normalize("A+"));
+        assertEquals("a-", DisplayNameNormalizer.normalize("A-"));
     }
 }

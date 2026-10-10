@@ -9,6 +9,6 @@ public class DisplayNameNormalizer {
         }
         String nfdNormalizedString = Normalizer.normalize(displayName, Normalizer.Form.NFD); 
         String withoutDiacritics = nfdNormalizedString.replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
-        return withoutDiacritics.trim().toLowerCase().replaceAll("[^a-z0-9\\s]", "").replaceAll("\\s+", " ");
+        return withoutDiacritics.trim().toLowerCase().replaceAll("[^a-z0-9\\s+\\-]", "").replaceAll("\\s+", " ");
     }
 }

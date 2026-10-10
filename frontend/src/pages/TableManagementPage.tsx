@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { tableApi, type TableDetail } from '../api/tables';
 import CreateTableModal from '../components/CreateTableModal';
-import { Plus, Table2, LayoutTemplate, Eye, Edit2, Trash2, ChevronRight } from 'lucide-react';
+import { Plus, Table2, LayoutTemplate, ChevronRight } from 'lucide-react';
 
 export default function TableManagementPage() {
   const [tables, setTables] = useState<TableDetail[]>([]);
@@ -29,7 +29,7 @@ export default function TableManagementPage() {
   }, []);
 
   return (
-    <div className="min-h-full bg-[#121212] text-neutral-200">
+    <div className="flex-1 overflow-auto bg-[#121212] text-neutral-200">
       <div className="p-8">
         <div className="flex justify-between items-start mb-8">
           <div className="flex items-start gap-4">

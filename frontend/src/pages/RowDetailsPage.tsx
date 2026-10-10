@@ -86,7 +86,7 @@ export default function RowDetailsPage() {
 
     return (
         <div className="min-h-screen bg-[#121212] text-neutral-200 p-8 pt-12">
-            <div className="max-w-5xl mx-auto">
+            <div className="max-w-7xl mx-auto">
                 <BackNavigation to={`/tables/${table.id}`} label={`Back to ${table.displayName}`} />
                 <div className="mb-8 mt-6 flex justify-between items-center">
                     <div className="flex items-center gap-3">

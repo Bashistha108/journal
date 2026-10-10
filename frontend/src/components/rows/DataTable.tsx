@@ -58,17 +58,17 @@ export const DataTable: React.FC<Props> = ({ table, rows, currentSort, onSort, o
                                 onSort={onSort} 
                             />
                         ))}
-                        <th className="px-6 py-4 font-medium text-neutral-400 text-right w-24">Actions</th>
+                        <th className="px-6 py-2.5 font-medium text-neutral-400 text-right w-24">Actions</th>
                     </tr>
                 </thead>
                 <tbody className="divide-y divide-[#2e2e2e]">
                     {rows.map(row => (
                         <tr key={row.id} className="hover:bg-[#2a2a2a] transition-colors group">
-                            <td className="px-6 py-4 text-neutral-200">{row.id}</td>
+                            <td className="px-6 py-2.5 text-neutral-200">{row.id}</td>
                             {table.columns.map(col => {
                                 const val = row.values[col.id];
                                 return (
-                                    <td key={col.id} className="px-6 py-4 text-neutral-200 whitespace-nowrap overflow-hidden text-ellipsis max-w-xs">
+                                    <td key={col.id} className="px-6 py-2.5 text-neutral-200 whitespace-nowrap overflow-hidden text-ellipsis max-w-xs">
                                         {col.dataType === 'IMAGE' ? (
                                             (row.attachmentCounts?.[col.id] || 0) > 0 ? (
                                                 <button 
@@ -93,7 +93,7 @@ export const DataTable: React.FC<Props> = ({ table, rows, currentSort, onSort, o
                                     </td>
                                 );
                             })}
-                            <td className="px-6 py-4 text-right">
+                            <td className="px-6 py-2.5 text-right">
                                 <RowActions 
                                     tableId={table.id}
                                     row={row}
