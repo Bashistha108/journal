@@ -38,9 +38,15 @@ public class AttachmentRepository {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbc.update(sql, params, keyHolder, new String[]{"id", "created_at"});
         
-        Long id = keyHolder.getKeyAs(Long.class);
         Map<String, Object> keys = keyHolder.getKeys();
-        OffsetDateTime createdAt = (OffsetDateTime) keys.get("created_at");
+        Long id = ((Number) keys.get("id")).longValue();
+        Object createdAtObj = keys.get("created_at");
+        OffsetDateTime createdAt = null;
+        if (createdAtObj instanceof java.sql.Timestamp) {
+            createdAt = ((java.sql.Timestamp) createdAtObj).toInstant().atOffset(java.time.ZoneOffset.UTC);
+        } else if (createdAtObj instanceof OffsetDateTime) {
+            createdAt = (OffsetDateTime) createdAtObj;
+        }
         
         AttachmentMetadata metadata = new AttachmentMetadata();
         metadata.setId(id);

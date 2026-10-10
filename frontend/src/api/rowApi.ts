@@ -26,7 +26,7 @@ export const rowApi = {
             const formData = new FormData();
             formData.append('row', new Blob([JSON.stringify(data)], { type: 'application/json' }));
             files.forEach(f => formData.append(f.clientRef, f.file));
-            return fetchClient<RowDetail>(`/tables/${tableId}/rows/${rowId}`, { method: 'PATCH', body: formData });
+            return fetchClient<RowDetail>(`/tables/${tableId}/rows/${rowId}/update`, { method: 'POST', body: formData });
         }
         return fetchClient<RowDetail>(`/tables/${tableId}/rows/${rowId}`, {
             method: 'PATCH',
